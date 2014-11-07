@@ -9,7 +9,9 @@
 
 from scrapy.item import Item, Field 
 
-
+#----------------------------
+# top 250's movie.
+#----------------------------
 class TopMovieItem(Item):
     name        = Field()   ## 电影名
     year        = Field()   ## 上映时间

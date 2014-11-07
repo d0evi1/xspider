@@ -18,7 +18,7 @@ NEWSPIDER_MODULE = 'xspider.spiders'
 
 
 ITEM_PIPELINES={
-    'xspider.pipelines.TopMoviePipeline':400,
+    'xspider.pipelines.TopMoviePipeline.TopMoviePipeline':400,
 }
 
 LOG_LEVEL='DEBUG'

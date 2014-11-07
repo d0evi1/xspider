@@ -5,7 +5,7 @@
 from scrapy.selector import Selector
 from scrapy.contrib.spiders import CrawlSpider,Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from xspider.items import TopMovieItem
+from xspider.items.TopMovieItem import TopMovieItem
 
 class MoiveSpider(CrawlSpider):
     name="xspider"
