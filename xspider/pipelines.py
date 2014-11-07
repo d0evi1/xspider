@@ -12,7 +12,7 @@ from scrapy.http import Request
 import MySQLdb
 import MySQLdb.cursors
 
-class XspiderPipeline(object):
+class TopMoviePipeline(object):
     def __init__(self):
         self.dbpool = adbapi.ConnectionPool('MySQLdb',
                 db = 'douban_movie',
@@ -23,13 +23,19 @@ class XspiderPipeline(object):
                 use_unicode = False
         )
 
+    #-----------------------------
+    #
+    #-----------------------------
     def process_item(self, item, spider):
         query = self.dbpool.runInteraction(self.insert_data, item)
         query.addErrback(self.handle_error)
         return item
 
+    #------------------------------
+    ### insert into db.
+    #------------------------------
     def insert_data(self,tx,item):
-        tx.execute("select * from t_movie where name= %s",(item['name'][0],))
+        tx.execute("select * from t_top_movie where name= %s",(item['name'][0],))
         result=tx.fetchone()
         log.msg(result,level=log.DEBUG)
         print result
@@ -37,20 +43,22 @@ class XspiderPipeline(object):
             log.msg("Item already stored in db:%s" % item,level=log.DEBUG)
         else:
             category=''
-            actor=''
             lenCate = len(item['category'])
-            lenActor = len(item['actor'])
             for n in xrange(lenCate):
                 category+=item['category'][n]
                 if n<lenCate-1:
                     category+='/'
+            
+            
+            actor=''
+            lenActor = len(item['actor'])
             for n in xrange(lenActor):
                 actor+=item['actor'][n]
                 if n<lenActor-1:
                     actor+='/'
 
             tx.execute(\
-                "insert into t_movie (name,\
+                "insert into t_top_movie (name,\
                     year,\
                     score,\
                     director,\
@@ -65,5 +73,6 @@ class XspiderPipeline(object):
 
             log.msg("Item stored in db: %s" % item, level=log.DEBUG)
 
+    ###
     def handle_error(self, e):
         log.err(e)

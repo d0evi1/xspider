@@ -10,7 +10,7 @@
 from scrapy.item import Item, Field 
 
 
-class XspiderItem(Item):
+class TopMovieItem(Item):
     name        = Field()   ## 电影名
     year        = Field()   ## 上映时间
     score       = Field()   ## 评分

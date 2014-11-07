@@ -6,7 +6,7 @@ use douban_movie;
 
 --
 drop table if exists t_movie;
-create table if not exists t_movie (
+create table if not exists t_top_movie (
     name        varchar(64),
     year        varchar(32),
     score       int(11) unsigned,

@@ -5,7 +5,7 @@
 from scrapy.selector import Selector
 from scrapy.contrib.spiders import CrawlSpider,Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from xspider.items import XspiderItem
+from xspider.items import TopMovieItem
 
 class MoiveSpider(CrawlSpider):
     name="xspider"
@@ -18,7 +18,7 @@ class MoiveSpider(CrawlSpider):
 
     def parse_movie(self,response):
         sel = Selector(response)
-        item = XspiderItem()
+        item = TopMovieItem()
 
         item['name'] = sel.xpath('//*[@id="content"]/h1/span[1]/text()').extract()
         item['year'] = sel.xpath('//*[@id="content"]/h1/span[2]/text()').re(r'\((\d+)\)')
