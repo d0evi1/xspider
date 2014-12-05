@@ -5,7 +5,7 @@ create database if not exists douban_movie charset=utf8;
 use douban_movie;
 
 --
-drop table if exists t_movie;
+drop table if exists t_top_movie;
 create table if not exists t_top_movie (
     name        varchar(64),
     year        varchar(32),
