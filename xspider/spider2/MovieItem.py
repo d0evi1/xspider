@@ -14,6 +14,7 @@ from scrapy.item import Item, Field
 #-----------------------------
 class MovieItem(Item):
     subject_id  = Field()   ## 豆瓣id
+    dtype       = Field()   ## 电影类型：电影－1  电视剧－2
     name        = Field()   ## 电影名
     director    = Field()   ## 导演
     writer      = Field()   ## 编剧
@@ -23,6 +24,7 @@ class MovieItem(Item):
     lang        = Field()   ## 语言
     play_time   = Field()   ## 上映时间, 上映地
     length      = Field()   ## 片长
+    sets        = Field()   ## 集数
     alias_name  = Field()   ## 别名
     imdb        = Field()   ## imdb链接
     score       = Field()   ## 评分

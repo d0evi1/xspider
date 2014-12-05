@@ -78,6 +78,7 @@ class MoviePipeline(object):
             subject_id  = self.get_first(item['subject_id'])
             name        = self.get_first(item['name'])
 
+            dtype       = self.get_first(item['dtype'])
             director    = self.get_items(item['director'])
             writer      = self.get_items(item['writer'])
             actor       = self.get_items(item['actor'])
@@ -88,6 +89,7 @@ class MoviePipeline(object):
             play_time   = self.get_first(item['play_time'])
 
             length      = self.get_first(item['length'])
+            sets        = self.get_first(item['sets'], True) 
             alias_name  = self.get_items(item['alias_name'])
             
             imdb        = self.get_first(item['imdb'])
@@ -105,29 +107,32 @@ class MoviePipeline(object):
 
             tx.execute(\
                 "insert into t_movies (subject_id,\
-                    name,\
-                    director,\
-                    writer,\
-                    actor,\
-                    category,\
-                    area,\
-                    lang,\
-                    play_time,\
-                    length,\
-                    alias_name,\
-                    imdb,\
-                    score,\
-                    score_num,\
+                    name,       \
+                    dtype,      \
+                    director,   \
+                    writer,     \
+                    actor,      \
+                    category,   \
+                    area,       \
+                    lang,       \
+                    play_time,  \
+                    length,     \
+                    sets,       \
+                    alias_name, \
+                    imdb,       \
+                    score,      \
+                    score_num,  \
                     collect_num,\
-                    wish_num,\
-                    synopsis,\
+                    wish_num,   \
+                    synopsis,   \
                     update_time) \
                     values (%s, %s, %s, %s, %s,\
                             %s, %s, %s, %s, %s,\
                             %s, %s, %s, %s, %s, \
-                            %s, %s)",\
+                            %s, %s, %s, %s, %s)",\
                 (subject_id,\
                 name,       \
+                dtype,      \
                 director,   \
                 writer,     \
                 actor,      \
@@ -136,6 +141,7 @@ class MoviePipeline(object):
                 lang,       \
                 play_time,  \
                 length,     \
+                sets,       \
                 alias_name, \
                 imdb,       \
                 score,      \
