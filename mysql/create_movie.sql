@@ -8,6 +8,7 @@ use douban_movie;
 drop table if exists t_movies;
 create table if not exists t_movies (
     subject_id  bigint(11) unsigned primary key comment '豆瓣id',
+    dtype       smallint(11) unsigned not null comment '类型：电视剧 or 电影',
     name        varchar(256) comment '片名',
     director    varchar(512) comment '导演',
     writer      varchar(512) comment '编剧',
@@ -28,6 +29,3 @@ create table if not exists t_movies (
 )engine=MyISAM charset=utf8;
 
 -- 创建评论表
-create table if not exists t_comments (
-    id          bigint(11)  auto comment '',
-)engine=MyISAM charset=utf8;
