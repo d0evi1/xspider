@@ -18,6 +18,7 @@ create table if not exists t_movies (
     lang        varchar(128) comment '语言',
     play_time   varchar(128) comment '首映日期',
     length      varchar(128) comment '片长',
+    sets        int(11) unsigned comment '集数',
     alias_name  varchar(512) comment '别名',
     imdb        varchar(256) comment 'imdb url',
     score       double       comment '评分',
