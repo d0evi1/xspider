@@ -41,8 +41,10 @@ SPIDER_MIDDLEWARES = {
 
 
 
-## 宽度优先(BFO) or 深度优先(DFO), default = 'DFO'
-#SCHEDULER_ORDER = 'BFO'
+## 深度优先 or 宽度优先
+#SCHEDULER_DISK_QUEUE = ’scrapy.squeue.PickleFifoDiskQueue’
+#SCHEDULER_MEMORY_QUEUE = ’scrapy.squeue.FifoMemoryQueue’
+
 
 ## 日志
 LOG_ENABLED     = True 

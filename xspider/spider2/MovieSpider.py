@@ -29,10 +29,19 @@ class MoiveSpider(CrawlSpider):
 #        Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/subject/\d+')),callback="parse_movie"),      
 #    ]
 
-    start_urls=["http://movie.douban.com/tag/%E7%88%B1%E6%83%85"]
+    start_urls=[
+            "http://movie.douban.com/tag/%E7%8E%8B%E5%AE%B6%E5%8D%AB",
+#            "http://movie.douban.com/tag/JohnnyDepp",
+
+        ]
     rules=[
         ## 抽取链接
-        Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/tag/%E7%88%B1%E6%83%85\?start=\d+.*')), ),
+#        Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/tag/JohnnyDepp\?start=\d+.*')), ),
+
+        Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/tag/%E7%8E%8B%E5%AE%B6%E5%8D%AB\?start=\d+.*')), ),
+
+
+
         ## 解析item
         Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/subject/\d+')),callback="parse_movie"),      
     ]
