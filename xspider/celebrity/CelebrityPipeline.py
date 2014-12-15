@@ -15,6 +15,8 @@ from twisted.enterprise import adbapi
 import MySQLdb
 import MySQLdb.cursors
 
+from xspider.celebrity.CelebrityItem import CelebrityItem
+
 import re
 import time
 
@@ -113,8 +115,10 @@ class CelebrityPipeline(object):
     #
     #-----------------------------
     def process_item(self, item, spider):
-        query = self.dbpool.runInteraction(self.insert_data, item)
-        query.addErrback(self.handle_error)
+        if isinstance(item, CelebrityItem):
+            query = self.dbpool.runInteraction(self.insert_celebrity, item)
+            query.addErrback(self.handle_error)
+
         return item
 
     #------------------------------
@@ -132,7 +136,7 @@ class CelebrityPipeline(object):
     #------------------------------
     ### insert into db.
     #------------------------------
-    def insert_data(self, tx, item):
+    def insert_celebrity(self, tx, item):
         id = item['id'][0]
         ret = self.is_filter(id) 
         if ret:

@@ -30,8 +30,10 @@ class CelebrityMiddleware(object):
         [id, ] = re.findall(r"\d+", url)
         set_name = "xspider.set.%s" % spider_name
         return self.redis.sismember(set_name, id)
-            
-    ### 
+
+    #----------------------------------------------
+    # 当spider处理完response，返回result, 调用该函数
+    #----------------------------------------------
     def process_spider_output(self, response, result, spider):
         if self.lock is True:
             self.info = spider
@@ -41,16 +43,17 @@ class CelebrityMiddleware(object):
         log.msg("----------%d---------------" % self.count, level=log.INFO)
         for x in result:
             if isinstance(x, Request):
-                #log.msg("[process_spider_output] type=%s, url=%s" %( type(x.url), x.url), level=log.INFO)
                 url = re.findall(r"movie.douban.com/celebrity/\d+", x.url)
+                ### none-celebrity url.
                 if len(url) == 0:
-                    log.msg(format="filter return: return this page: %(request)s",
+                    log.msg(format="[process]filter return: return this page: %(request)s",
                          level=log.INFO, spider=spider, request=x) 
                     yield x
                     continue 
-
+                
+                ### celebrity url.
                 if self.is_exist_url(url[0], spider.name) is True:
-                    log.msg(format="redis filter: Filter this page: %(request)s",
+                    log.msg(format="[process]redis filter: Filter this page: %(request)s",
                          level=log.INFO, spider=spider, request=x) 
                 else:
                     yield x

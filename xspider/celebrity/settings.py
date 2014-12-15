@@ -35,9 +35,9 @@ USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.5 (
 COOKIES_ENABLED = True
 
 #这是爬虫中间件，， 543是运行的优先级
-#SPIDER_MIDDLEWARES = {
-#    'xspider.celebrity.CelebrityMiddleware.CelebrityMiddleware': 543,
-#}
+SPIDER_MIDDLEWARES = {
+    'xspider.celebrity.CelebrityMiddleware.CelebrityMiddleware': 543,
+}
 
 
 
