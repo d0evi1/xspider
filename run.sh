@@ -6,16 +6,24 @@
 
 #scrapy crawl xspider
 
+date +"%Y%m%d %H:%m:%s"
+date +%s
+
 killall -9 python
-rm ./xspider/log/spider1.log
-rm ./xspider/log/spider2.log
 #scrapy crawlall
 
 #export SCRAPY_PROJECT=TopMovieSpider
 #scrapy crawl TopMovieSpider 
 
-export SCRAPY_PROJECT=MovieSpider
-scrapy crawl MovieSpider 
+### 1. movie.
+#rm ./xspider/log/movie.log
+#export SCRAPY_PROJECT=MovieSpider
+#scrapy crawl MovieSpider 
+
+###
+rm ./xspider/log/celebrity.log
+export SCRAPY_PROJECT=CelebritySpider
+scrapy crawl CelebritySpider 
 
 
 
