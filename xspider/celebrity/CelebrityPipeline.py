@@ -133,8 +133,11 @@ class CelebrityPipeline(object):
     ### insert into db.
     #------------------------------
     def insert_data(self, tx, item):
-        ret = self.is_filter(item['id'][0]) 
-        if ret == False:
+        id = item['id'][0]
+        ret = self.is_filter(id) 
+        if ret:
+            log.msg("filter id: %s" % id, level=log.INFO)
+        else:
             ## 特殊，多个
             id          = self.get_first(item['id'])
             name        = self.get_first(item['name'])
