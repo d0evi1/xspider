@@ -17,7 +17,10 @@ class UserItem(Item):
     user_name       = Field()   ## 姓名 
     location        = Field()   ## 性别 
     reg_time        = Field()   ## 星座 
-    intro           = Field()   ## 出生日期 
+    intro           = Field()   ## 出生日期
+
+    ###
+    follows         = Field()   ## 收听关系
     pass
 
 #-------------------------------

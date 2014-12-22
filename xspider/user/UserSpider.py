@@ -37,9 +37,9 @@ class UserSpider(CrawlSpider):
 
         ## 解析item
         Rule(SgmlLinkExtractor(allow=(r'^http://www.douban.com/people/[a-zA-Z0-9_]{3,32}/$')),callback="parse_user", follow=True),
-        Rule(SgmlLinkExtractor(allow=(r'^http://movie.douban.com/people/[a-zA-Z0-9_]{3,32}/collect')),callback="parse_collect", follow=True),
-        Rule(SgmlLinkExtractor(allow=(r'^http://movie.douban.com/people/[a-zA-Z0-9_]{3,32}/wish')),callback="parse_wish", follow=True),
-         Rule(SgmlLinkExtractor(allow=(r'^http://movie.douban.com/people/[a-zA-Z0-9_]{3,32}/do')),callback="parse_do", follow=True),
+#        Rule(SgmlLinkExtractor(allow=(r'^http://movie.douban.com/people/[a-zA-Z0-9_]{3,32}/collect')),callback="parse_collect", follow=True),
+#        Rule(SgmlLinkExtractor(allow=(r'^http://movie.douban.com/people/[a-zA-Z0-9_]{3,32}/wish')),callback="parse_wish", follow=True),
+#         Rule(SgmlLinkExtractor(allow=(r'^http://movie.douban.com/people/[a-zA-Z0-9_]{3,32}/do')),callback="parse_do", follow=True),
     ]
 
     #--------------------------------------
@@ -56,6 +56,8 @@ class UserSpider(CrawlSpider):
         item['location']    = sel.xpath('//*[@class="user-info"]/a[1]/text()').extract()
         item['reg_time']    = sel.xpath('//*[@class="user-info"]/div[1]/text()').extract()
         item['intro']       = sel.xpath('//*[@id="intro_display"]/text()').extract() 
+
+        item['follows']  = sel.xpath('//div[@id="friend"]/dl[@class="obu"]').extract()
 
         log.msg("parser_user: %s" % item, level=log.INFO)
         

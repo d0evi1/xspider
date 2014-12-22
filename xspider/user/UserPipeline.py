@@ -142,6 +142,19 @@ class UserPipeline(object):
 
         return sids[0] 
 
+    #-------------------------------
+    # 从html中获取follow_id.
+    #-------------------------------
+    def get_follows(self, follows_html):
+        if len(follows_html) == 0:
+            return None
+
+        follow_ids = re.findall(r'^http://www.douban.com/people/([a-zA-Z0-9_]{3,32})/$', follows_html[0])
+        if len(follow_ids) == 0:
+            return None
+
+        return follow_ids[0]
+
     #------------------------------
     # 从html中获取rank
     #------------------------------
@@ -186,6 +199,9 @@ class UserPipeline(object):
 
             log.msg("user item to db: %s" % item, level=log.INFO)
 
+            ## 插入关系链
+            self.insert_follow(tx, item) 
+
     #--------------------------------------
     # 插入collect (看过)
     #--------------------------------------
@@ -223,7 +239,7 @@ class UserPipeline(object):
 
 
     #--------------------------------------
-    # 插入collect (看过)
+    # 插入wishes (看过)
     #--------------------------------------
     def insert_wish(self, tx, item):
         id = item['user_id'][0]
@@ -254,7 +270,7 @@ class UserPipeline(object):
             log.msg("items to db: user_id=%s, subject_id=%s, day=%s" % (user_id, subject_id, day), level=log.INFO)
 
     #--------------------------------------
-    # 插入collect (看过)
+    # 插入do (在看)
     #--------------------------------------
     def insert_do(self, tx, item):
         id = item['user_id'][0]
@@ -283,6 +299,33 @@ class UserPipeline(object):
                     day))
 
             log.msg("items to db: user_id=%s, subject_id=%s, day=%s" % (user_id, subject_id, day), level=log.INFO)
+
+    #--------------------------------------
+    # 插入collect (看过)
+    #--------------------------------------
+    def insert_follow(self, tx, item):
+        id = item['user_id'][0]
+        follows = item['follows']
+
+        i = 0
+        log.msg('num=%s, follows=%s' %(len(follows), follows), level=log.INFO)
+        for follow in follows:
+            csel = Selector(text=follow)
+            follow_ids  = csel.xpath('//dt/a/@href').extract()
+            
+            user_id     = id
+            follow_id  = self.get_follows(follow_ids)
+
+            tx.execute(\
+                    "insert ignore into t_follow_list \
+                    (user_id,           \
+                     follow_id)            \
+                     values (%s, %s)",  \
+                    (user_id,       \
+                    follow_id))
+
+            log.msg("items to db: user_id=%s, follow_id=%s" % (user_id, follow_id), level=log.INFO)
+
 
     ###
     def handle_error(self, e):
