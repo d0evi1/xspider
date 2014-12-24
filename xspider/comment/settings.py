@@ -8,24 +8,17 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #
 
-BOT_NAME = 'xspider'
+BOT_NAME = 'xspider-comment'
 
-SPIDER_MODULES = ['xspider.spiders']
-NEWSPIDER_MODULE = 'xspider.spiders'
-
-### commands
-COMMANDS_MODULE = 'xspider.commands'
-
-
-
+SPIDER_MODULES = ['xspider.comment']
+NEWSPIDER_MODULE = 'xspider.comment'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'xspider (+http://www.yourdomain.com)'
 
 
 ITEM_PIPELINES={
-#    'xspider.pipelines.TopMoviePipeline.TopMoviePipeline':400,
-    'xspider.pipelines.MoviePipeline.MoviePipeline':400,
+    'xspider.comment.CommentPipeline.CommentPipeline':400,
 }
 
 
@@ -41,9 +34,21 @@ USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.5 (
 ## 开启cookie.
 COOKIES_ENABLED = True
 
+#这是爬虫中间件，， 543是运行的优先级
+#SPIDER_MIDDLEWARES = {
+#    'xspider.movie.MovieMiddleware.MovieMiddleware': 543,
+#}
+
+
+
+## 深度优先 or 宽度优先
+#SCHEDULER_DISK_QUEUE = ’scrapy.squeue.PickleFifoDiskQueue’
+#SCHEDULER_MEMORY_QUEUE = ’scrapy.squeue.FifoMemoryQueue’
+
+
 ## 日志
 LOG_ENABLED     = True 
 LOG_ENCODING    = 'utf-8'
-LOG_FILE        = '/Users/jungle/workspace/my_proj/xspider/xspider/log/spider.log'
+LOG_FILE        = '/Users/jungle/workspace/my_proj/xspider/xspider/log/comment.log'
 LOG_LEVEL       = 'INFO'
 LOG_STDOUT      = True 

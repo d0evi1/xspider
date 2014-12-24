@@ -21,9 +21,19 @@ killall -9 python
 #scrapy crawl MovieSpider 
 
 ###
-rm ./xspider/log/celebrity.log
-export SCRAPY_PROJECT=CelebritySpider
-scrapy crawl CelebritySpider 
+#rm ./xspider/log/celebrity.log
+#export SCRAPY_PROJECT=CelebritySpider
+#scrapy crawl CelebritySpider 
+
+###
+#rm ./xspider/log/user.log
+#export SCRAPY_PROJECT=UserSpider
+#scrapy crawl UserSpider 
+
+rm ./xspider/log/comment.log
+export SCRAPY_PROJECT=CommentSpider
+scrapy crawl CommentSpider 
+
 
 
 
