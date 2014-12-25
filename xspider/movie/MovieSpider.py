@@ -12,7 +12,7 @@ from scrapy import log
 from scrapy.selector import Selector
 from scrapy.contrib.spiders import CrawlSpider,Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from xspider.spider2.MovieItem import MovieItem
+from xspider.movie.MovieItem import MovieItem
 
 
 #----------------------------------
@@ -21,30 +21,19 @@ from xspider.spider2.MovieItem import MovieItem
 class MoiveSpider(CrawlSpider):
     name="MovieSpider"
     allowed_domains=["douban.com"]
-#    start_urls=["http://movie.douban.com/tag/%E7%94%B5%E5%BD%B1"]
-#    rules=[
-#        ## 抽取链接
-#        Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/tag/%E7%94%B5%E5%BD%B1\?start=\d+.*')), ),
-#        ## 解析item
-#        Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/subject/\d+')),callback="parse_movie"),      
-#    ]
 
-    start_urls=[
-            "http://movie.douban.com/tag/%E7%8E%8B%E5%AE%B6%E5%8D%AB",
-#            "http://movie.douban.com/tag/JohnnyDepp",
-
-        ]
+    start_urls=["http://movie.douban.com/"]
     rules=[
         ## 抽取链接
-#        Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/tag/JohnnyDepp\?start=\d+.*')), ),
-
-        Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/tag/%E7%8E%8B%E5%AE%B6%E5%8D%AB\?start=\d+.*')), ),
-
-
-
+        #Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/tag/2014\?start=\d+.*')), ),
+        
         ## 解析item
-        Rule(SgmlLinkExtractor(allow=(r'http://movie.douban.com/subject/\d+')),callback="parse_movie"),      
-    ]
+        Rule(SgmlLinkExtractor(allow=(r'^http://movie.douban.com/subject/\d+$')),callback="parse_movie", follow=True),      
+        Rule(SgmlLinkExtractor(allow=(r'^http://movie.douban.com/subject/\d+/\?')),callback="parse_movie", follow=True),      
+#        Rule(SgmlLinkExtractor(allow=(r'$http://movie.douban.com/subject/\d+/\?from=showing$')),callback="parse_movie", follow=True),      
+        
+ 
+        ]
 
     #-------------------------------------
     # 公共处理部分
@@ -78,9 +67,6 @@ class MoiveSpider(CrawlSpider):
         ## intro.
         item['synopsis']    = sel.xpath('//span[@property="v:summary"]/text()').extract() 
 
- 
-
-
     #-------------------------------------
     # 处理电视剧, xpath解析
     #-------------------------------------
@@ -111,7 +97,6 @@ class MoiveSpider(CrawlSpider):
         ## 公共部分
         self.process_common(response, sel, item)
 
-
         ## 电影物殊部分 
         item['dtype']       = ['1']
         item['length']      = sel.xpath('//span[@property="v:runtime"]/@content').extract()
@@ -131,6 +116,7 @@ class MoiveSpider(CrawlSpider):
         ## 电视剧 or 电影
         data_type = sel.xpath('(//span[@class="rec"]/a/@data-type)[1]').extract()
         log.msg("%s" % data_type, level=log.INFO)
+  
         if cmp(data_type[0], "电视剧".decode('utf-8')) == 0:
             return self.process_drama(response, sel) 
         elif cmp(data_type[0], "电影".decode('utf-8')) == 0:

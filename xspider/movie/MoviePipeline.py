@@ -16,10 +16,16 @@ import MySQLdb.cursors
 import re
 import time
 
+from xspider.comm.SetFilter import SetFilter 
+
 #-----------------------------------
-#
+# 电影pipeline.
 #-----------------------------------
 class MoviePipeline(object):
+    
+    #------------------------------
+    # mysql/redis.
+    #------------------------------
     def __init__(self):
         self.dbpool = adbapi.ConnectionPool('MySQLdb',
                 db = 'douban_movie',
@@ -29,6 +35,9 @@ class MoviePipeline(object):
                 charset = 'utf8',
                 use_unicode = False
         )
+
+        ### redis filter.
+        self.filter = SetFilter('xspider.set.subject_id')  
     
     #-----------------------------
     # 将一个list列表做拼接.
@@ -57,7 +66,7 @@ class MoviePipeline(object):
         return ret
 
     #-----------------------------
-    #
+    # 处理主逻辑.
     #-----------------------------
     def process_item(self, item, spider):
         query = self.dbpool.runInteraction(self.insert_data, item)
@@ -68,13 +77,11 @@ class MoviePipeline(object):
     ### insert into db.
     #------------------------------
     def insert_data(self, tx, item):
-        tx.execute("select * from t_movies where subject_id = %s",(item['subject_id'][0],))
-        result = tx.fetchone()
-
+        id = item['subject_id'][0]  
+        result = self.filter.is_exists(id)
         if result:
-            log.msg("Item already stored in db:%s" % item,level=log.INFO)
+            log.msg("filter subject id:%s" % id, level=log.INFO)
         else:
-            ## 特殊，多个
             subject_id  = self.get_first(item['subject_id'])
             name        = self.get_first(item['name'])
 
@@ -106,7 +113,7 @@ class MoviePipeline(object):
             update_time  = int(time.time())
 
             tx.execute(\
-                "insert into t_movies (subject_id,\
+                "insert ignore into t_movies (subject_id,\
                     name,       \
                     dtype,      \
                     director,   \
@@ -151,8 +158,8 @@ class MoviePipeline(object):
                 synopsis,   \
                 update_time))
 
-            log.msg("item stored in db: %s" % item, level=log.INFO)
-
+            log.msg("movie item to db: %s" % item, level=log.INFO)
+            self.filter.add_filter(subject_id)
     ###
     def handle_error(self, e):
         log.err(e)

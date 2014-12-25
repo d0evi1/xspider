@@ -8,12 +8,13 @@ from scrapy import signals,log
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy.http import Request
 
+from xspider.comm.SetFilter import SetFilter
+
 #--------------------------------
 # 主要功能：
 # 1. 去重链接.
 #--------------------------------
 class MovieMiddleware(object):
-    redis = None
     lock = True
     info = {}
     count = 0
@@ -26,10 +27,9 @@ class MovieMiddleware(object):
     #---------------------------
     ### redis filter 
     #---------------------------
-    def is_exist_url(self, url, spider_name):
+    def is_exist_url(self, url):
         [subject_id, ] = re.findall(r"\d+", url)
-        set_name = "xspider.set.%s" % spider_name
-        return self.redis.sismember(set_name, subject_id)
+        return self.filter.is_exists(subject_id)
             
     ### 
     def process_spider_output(self, response, result, spider):
@@ -47,7 +47,7 @@ class MovieMiddleware(object):
                     yield x
                     continue 
 
-                if self.is_exist_url(url[0], spider.name) is True:
+                if self.is_exist_url(url[0]) is True:
                     log.msg(format="redis filter: Filter this page: %(request)s",
                          level=log.INFO, spider=spider, request=x) 
                 else:
@@ -55,13 +55,16 @@ class MovieMiddleware(object):
             else:
                 yield x
 
+    #------------------------------------
     ### init redis.
+    #------------------------------------
     def open(self):
         log.msg("SpiderMiddleware is open().", level=log.INFO)
-        self.redis = redis.Redis('127.0.0.1')
+        self.filter = SetFilter('xspider.set.subject_id')
 
-
+    #--------------------------------------
     ### close redis. 
+    #--------------------------------------
     def close(self):
         log.msg("SpiderMiddleware is close()", level=log.INFO)
         #self.redis.zrem(self.info.name, *self.info.start_urls)
