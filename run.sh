@@ -13,26 +13,26 @@ killall -9 python
 #scrapy crawlall
 
 #export SCRAPY_PROJECT=TopMovieSpider
-#scrapy crawl TopMovieSpider 
+#scrapy crawl TopMovieSpider   
 
 ### 1. movie.
-#rm ./xspider/log/movie.log
-#export SCRAPY_PROJECT=MovieSpider
-#scrapy crawl MovieSpider 
+rm ./xspider/log/movie.log
+export SCRAPY_PROJECT=MovieSpider
+scrapy crawl MovieSpider -s JOBDIR=dqs/moviespider 
 
 ###
 #rm ./xspider/log/celebrity.log
 #export SCRAPY_PROJECT=CelebritySpider
-#scrapy crawl CelebritySpider 
+#scrapy crawl CelebritySpider -s JOBDIR=dqs/celebrityspider 
 
 ###
 #rm ./xspider/log/user.log
 #export SCRAPY_PROJECT=UserSpider
-#scrapy crawl UserSpider 
+#scrapy crawl UserSpider -s JOBDIR=dqs/userspider 
 
-rm ./xspider/log/comment.log
-export SCRAPY_PROJECT=CommentSpider
-scrapy crawl CommentSpider 
+##rm ./xspider/log/comment.log
+##export SCRAPY_PROJECT=CommentSpider
+##scrapy crawl CommentSpider -s JOBDIR=dqs/commentspider 
 
 
 
